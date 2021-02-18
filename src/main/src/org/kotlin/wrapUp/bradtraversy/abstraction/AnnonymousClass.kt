@@ -1,4 +1,4 @@
-package org.kotlin.intro.abstraction
+package org.kotlin.wrapUp.bradtraversy.abstraction
 
 fun main(){
     val bear = object : AbstractClass("Bear"){

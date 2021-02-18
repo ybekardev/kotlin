@@ -1,4 +1,4 @@
-package org.kotlin.intro
+package org.kotlin.wrapUp.bradtraversy
 
 open class Animal(
         val name: String){

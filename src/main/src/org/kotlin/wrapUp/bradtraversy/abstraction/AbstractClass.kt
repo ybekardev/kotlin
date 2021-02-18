@@ -1,4 +1,4 @@
-package org.kotlin.intro.abstraction
+package org.kotlin.wrapUp.bradtraversy.abstraction
 
 abstract class AbstractClass(
         val name : String

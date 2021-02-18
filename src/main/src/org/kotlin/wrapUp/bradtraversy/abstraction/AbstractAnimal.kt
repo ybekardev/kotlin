@@ -1,4 +1,4 @@
-package org.kotlin.intro.abstraction
+package org.kotlin.wrapUp.bradtraversy.abstraction
 
 class AbstractAnimal : AbstractClass("Tilki") {
     override fun run(){

@@ -1,6 +1,6 @@
-package org.kotlin.intro
+package org.kotlin.wrapUp.bradtraversy
 
-import org.kotlin.intro.abstraction.AbstractAnimal
+import org.kotlin.wrapUp.bradtraversy.abstraction.AbstractAnimal
 
 fun main(){
     val dog = Animal("Tom")
