@@ -2,9 +2,9 @@ package org.kotlin.intro
 
 class Dog : Animal("Roth") {
 
-   /* init {
+    init {
         legCounts
-    }*/
+    }
 
     fun bark(){
         println("Whoof!")

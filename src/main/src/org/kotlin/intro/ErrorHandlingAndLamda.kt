@@ -2,7 +2,7 @@ package org.kotlin.intro
 
 fun main() {
 
-       //error()
+       error()
        println(lambda())
        println(lambdaCustom())
 
