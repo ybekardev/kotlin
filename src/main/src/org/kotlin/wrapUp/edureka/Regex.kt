@@ -43,4 +43,28 @@ fun main(){
     val l = e?.length ?: -1
     println(l)
 
+    val d : String? = "Hello"
+    val b = d?.length ?: -1
+    println(b)
+
+    val a = "World"
+    val c = a.length ?: -1
+    println(c)
+
 }
+
+/*
+Elvis Operator (?:)
+
+Example:
+In Kotlin, we can declare variable which can hold null reference. Suppose we have a nullable reference a, we can say "if a is not null, use it, otherwise use some non-null value x"
+
+var a: String? = "Nullable String Value"
+Now, a can be null. So when we need to access value of a, then we need to perform safety check, whether it contains value or not. We can perform this safety check by conventional if...else statement.
+
+val b: Int = if (a != null) a.length else -1
+But here comes advance operator Elvis(Operator Elvis : ?:). Above if...else can be expressed with the Elvis operator as below:
+
+val b = a?.length ?: -1
+If the expression to the left of ?: (here : a?.length) is not null, the elvis operator returns it, otherwise it returns the expression to the right (here: -1). Right-hand side expression is evaluated only if the left-hand side is null.
+ */
