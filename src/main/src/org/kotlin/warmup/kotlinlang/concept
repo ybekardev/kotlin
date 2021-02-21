@@ -1,0 +1,44 @@
+
+    https://kotlinlang.org/docs/competitive-programming.html#learning-kotlin
+
+    * use of Kotlin's null-assertion operator !!
+    * function is defined to return a nullable type as String?
+    * tailrec is used before the fun to indicate there is a recursive function
+    * Note the use of Kotlin's null-assertion operator !! after the readLine() function call. Kotlin's readLine() function is defined to return a nullable type String? and returns null on the end of the input, which explicitly forces the developer to handle the case of missing input.
+
+     * There is no need to handle the case of misformatted input in competitive programming. In competitive programming, an input format is always precisely specified and the actual input cannot deviate from the input specification in the problem statement.
+     That's what the null-assertion operator !! essentially does — it asserts that the input string is present and throws an exception otherwise. Likewise, the String.toInt() function throws an exception if the input string is not an integer.
+
+     * val n = readLine()!!.toInt()
+     * val s = readLine()!!
+
+     * handy Kotlin features as local functions - the elvis operator ?: that allow to express idioms like "take the value if it is positive or else use length" with a concise and readable expressions like .takeIf { it >= 0 } ?: s.length,
+     yet it is perfectly fine with Kotlin to create additional mutable variables and express the same code in imperative style, too.
+
+     * Elvis Operator (?:)
+
+     Example:
+     In Kotlin, we can declare variable which can hold null reference. Suppose we have a nullable reference a, we can say "if a is not null, use it, otherwise use some non-null value x"
+
+     var a: String? = "Nullable String Value"
+     Now, a can be null. So when we need to access value of a, then we need to perform safety check, whether it contains value or not. We can perform this safety check by conventional if...else statement.
+
+     val b: Int = if (a != null) a.length else -1
+     But here comes advance operator Elvis(Operator Elvis : ?:). Above if...else can be expressed with the Elvis operator as below:
+
+     val b = a?.length ?: -1
+     If the expression to the left of ?: (here : a?.length) is not null, the elvis operator returns it, otherwise it returns the expression to the right (here: -1). Right-hand side expression is evaluated only if the left-hand side is null.
+
+    * To make reading the input in competitive programming tasks like this more concise, you can have the following list of helper input-reading functions:
+    private fun readLn() = readLine()!! // string line
+    private fun readInt() = readLn().toInt() // single int
+    private fun readStrings() = readLn().split(" ") // list of strings
+    private fun readInts() = readStrings().map { it.toInt() } // list of ints
+
+    * Writing output in Kotlin is usually straightforward with println(...) slows down the process. A faster way to write many lines from an array or a list is using joinToString() function with "\n" as the separator, like this:
+      println(a.joinToString("\n")) // each element of array/list of a separate line
+
+    * Inheritance between classes is declared by a colon (: ). Classes are final by default; to make a class inheritable, mark it as open.
+
+    * A reference must be explicitly marked as nullable when null value is possible. Nullable type names have ? at the end.
+
