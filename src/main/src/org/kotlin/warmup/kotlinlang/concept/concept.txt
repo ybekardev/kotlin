@@ -42,3 +42,389 @@
 
     * A reference must be explicitly marked as nullable when null value is possible. Nullable type names have ? at the end.
 
+*
+Note that unlike some other languages, there are no implicit widening conversions for numbers in Kotlin -> Error: Type mismatch. NO TYPE CASTING!!!
+For example, a function with a Double parameter can be called only on Double values, but not Float, Int, or other numeric values.
+Instead use Explicit Conversions:
+All number types support conversions to other types:
+
+val b: Byte = 1 // OK, literals are checked statically
+val i1: Int = b.toInt()
+
+toByte(): Byte
+toShort(): Short
+toInt(): Int
+toLong(): Long
+toFloat(): Float
+toDouble(): Double
+toChar(): Char
+
+*
+Strings are immutable. Once you initialize a string, you can't change its value or assign a new value to it. All operations that transform strings return their results in a new String object, leaving the original string unchanged.
+
+val str = "abcd"
+println(str.toUpperCase()) // Create and print a new String object
+println(str) // the original string remains the same
+
+*
+To concatenate strings, use the + operator. This also works for concatenating strings with values of other types, as long as the first element in the expression is a string:
+
+val s = "abc" + 1
+println(s + "def")
+
+*
+A raw string is delimited by a triple quote (""" ), contains no escaping and can contain newlines and any other characters:
+
+val text = """
+    for (c in "foo")
+        print(c)
+"""
+
+To remove leading whitespace from raw strings, use the trimMargin() function:
+
+val text = """
+    |Tell me and I forget.
+    |Teach me and I remember.
+    |Involve me and I learn.
+    |(Benjamin Franklin)
+    """.trimMargin()
+
+By default, | is used as margin prefix, but you can choose another character and pass it as a parameter, like trimMargin(">").
+
+*
+To insert the $ character in a raw string (which doesn't support backslash escaping), use the following syntax:
+
+val price = """
+${'$'}9.99
+"""
+
+*Arrays
+val array: IntArray = intArrayOf(1,3,6,9)
+    array[0] = array[1] + array[2]
+    println(array.contentToString())
+    println(Arrays.toString(array))
+
+val array5 = IntArray(5)
+val array42 = IntArray(4) {23}
+val arrayM = IntArray(3) { it * 4 }
+
+*
+CASTING - https://kotlinlang.org/docs/typecasts.html#unchecked-casts
+Smart casts
+In most cases, you don't need to use explicit cast operators in Kotlin because the compiler tracks the is -checks and explicit casts for immutable values and inserts (safe) casts automatically when needed:
+fun demo(x: Any) {
+    if (x is String) {
+        print(x.length) // x is automatically cast to String
+    }
+}
+Note that smart casts work only when the compiler can guarantee that the variable won't change between the check and the usage. More specifically, smart casts are applicable according to the following rules:
+
+val local variables - always except for local delegated properties.
+val properties - if the property is private or internal or the check is performed in the same module where the property is declared. Smart casts aren't applicable to open properties or properties that have custom getters.
+var local variables - if the variable is not modified between the check and the usage, is not captured in a lambda that modifies it, and is not a local delegated property.
+var properties - never because the variable can be modified at any time by other code.
+
+*
+"Unsafe" cast operator
+Usually, the cast operator throws an exception if the cast isn't possible. Thus, it's called unsafe. The unsafe cast in Kotlin is done by the infix operator as.
+
+ val x: String = y as String
+
+*
+"Safe" (nullable) cast operator
+To avoid exceptions, use the safe cast operator as? that returns null on failure.
+
+val x: String? = y as? String
+
+*
+If you're using if as an expression, for example, for returning its value or assigning it to a variable, the else branch is mandatory.
+
+*
+when matches its argument against all branches sequentially until some branch condition is satisfied.
+The else branch is evaluated if none of the other branch conditions are satisfied. If when is used as an expression, the else branch is mandatory
+
+*
+Alternatively, you can use the withIndex library function:
+fun withIndexLoop(){
+    var items = listOf("apple", "kiwi", "banana")
+    for((index, values) in items.withIndex()){
+        println("The element is: $index, - $values")
+    }
+}
+
+*
+Kotlin has three structural jump expressions:
+
+return by default returns from the nearest enclosing function or anonymous function
+break terminates the nearest enclosing loop
+continue proceeds to the next step of the nearest enclosing loop
+All of these expressions can be used as part of larger expressions:
+
+*
+https://kotlinlang.org/docs/returns.html#return-at-labels
+To return from a lambda expression, label it and qualify the return:
+fun foo() {
+    listOf(1, 2, 3, 4, 5).forEach lit@{
+        if (it == 3) return@lit // local return to the caller of the lambda - the forEach loop
+        print(it)
+    }
+    print(" done with explicit label")
+}
+
+fun labelForEach(){
+    listOf(1,2,3,4,5).forEach {
+        if(it == 3) return@forEach
+        println(it)
+    }
+    println(" done with implicit label")
+}
+
+fun labelLoop(){
+    listOf(1,2,3,4,5).forEach loop@{
+        if(it == 3) return@loop
+        println(it)
+    }
+    println(" done with nested loop")
+}
+
+The return -expression returns from the nearest enclosing function:
+fun label(){
+    listOf(1,2,3,4,5).forEach{
+        if (it == 3) return // non-local return directly to the caller of foo()
+        println(it)
+    }
+    println("Unreachable point")
+}
+
+*
+Kotlin does not have checked exceptions.
+TRY - CATCH
+There may be zero or more catch blocks. finally block may be omitted.
+However, at least one catch or finally block should be present.
+
+try is an expression; thus, it can have a return value:
+val a: Int? = try { parseInt(input) } catch (e: NumberFormatException) { null }
+
+throw is an expression in Kotlin, so you can use it, for example, as part of an Elvis expression:
+val s = person.name ?: throw IllegalArgumentException("Name required")
+The type of the throw expression is the special type Nothing. The type has no values and is used to mark code locations that can never be reached. In your own code, you can use Nothing to mark a function that never returns:
+
+fun fail(message: String): Nothing {
+    throw IllegalArgumentException(message)
+}
+
+*
+CONSTRUCTORS
+A class in Kotlin can have a primary constructor and one or more secondary constructors.
+The primary constructor is part of the class header: it goes after the class name (and optional type parameters).
+
+To create a class and constructor
+class Person constructor(firstName: String) {   }
+
+If the primary constructor does not have any annotations or visibility modifiers, the constructor keyword can be omitted:
+class Person(firstName: String) { /*...*/ }
+
+The primary constructor cannot contain any code. Initialization code can be placed in initializer blocks, which are prefixed with the init keyword.
+During an instance initialization, the initializer blocks are executed in the same order as they appear in the class body, interleaved with the property initializers
+Parameters of the primary constructor can be used in the initializer blocks. They can also be used in property initializers declared in the class body
+
+In fact, for declaring properties and initializing them from the primary constructor, Kotlin has a concise syntax:
+class Person(val firstName: String, val lastName: String, var age: Int) { /*...*/ }
+
+*
+Much the same way as regular properties, the properties declared in the primary constructor can be mutable (var) or read-only (val ).
+If the constructor has annotations or visibility modifiers, the constructor keyword is required, and the modifiers go before it:
+class Customer public @Inject constructor(name: String) { /*...*/ }
+
+*
+class Employee {
+    var employees: MutableList<Employee> = mutableListOf()
+Secondary constructors
+The class can also declare secondary constructors, which are prefixed with constructor
+    constructor(manager: Employee) {
+        manager.employees.add(this)
+    }
+}
+
+*
+class Manager(val name: String) {
+    var worker: MutableList<Manager> = mutableListOf()
+If the class has a primary constructor, each secondary constructor needs to delegate to the primary constructor, either directly or indirectly through another secondary constructor(s).
+Delegation to another constructor of the same class is done using the this keyword
+    constructor(name: String, leader: Manager) : this(name) {
+        leader.worker.add(this)
+    }
+}
+
+*
+Code in initializer blocks effectively becomes part of the primary constructor.
+Delegation to the primary constructor happens as the first statement of a secondary constructor, so the code in all initializer blocks and property initializers is executed before the secondary constructor body.
+Even if the class has no primary constructor, the delegation still happens implicitly, and the initializer blocks are still executed:
+
+class Constructors {
+    init {
+        println("Init block")
+    }
+    constructor(i: Int) {
+        println("Constructor $i")
+    }
+}
+class Constructors {
+    init {
+        println("Init block")
+    }
+    constructor(i: Int) {
+        println("Constructor $i")
+    }
+}
+
+*
+If a non-abstract class does not declare any constructors (primary or secondary), it will have a generated primary constructor with no arguments.
+The visibility of the constructor will be public.
+If you don't want your class to have a public constructor, declare an empty primary constructor with non-default visibility:
+class DontCreateMe private constructor () { /*...*/ }
+
+*
+Creating instances of classes
+To create an instance of a class, call the constructor as if it were a regular function:
+val invoice = Invoice()
+val customer = Customer("Joe Smith")
+Kotlin does not have a new keyword.
+
+*
+Class members can contain:
+Constructors and initializer blocks
+Functions
+Properties
+Nested and inner classes
+Object declarations
+
+*
+INHERITANCE
+All classes in Kotlin have a common superclass Any, that is the default superclass for a class with no supertypes declared:
+class Example // Implicitly inherits from Any
+Any has three methods: equals(), hashCode() and toString(). Thus, they are defined for all Kotlin classes.
+By default, Kotlin classes are final: they can’t be inherited. To make a class inheritable, mark it with the open keyword.
+open class Base //Class is open for inheritance
+
+To declare an explicit supertype, place the type after a colon in the class header:
+open class Base(p: Int)
+class Derived(p: Int) : Base(p)
+If the derived class has a primary constructor, the base class can (and must) be initialized right there, using the parameters of the primary constructor.
+If the derived class has no primary constructor, then each secondary constructor has to initialize the base type using the super keyword, or to delegate to another constructor which does that.
+Note that in this case different secondary constructors can call different constructors of the base type
+
+*
+OVERRIDING
+https://kotlinlang.org/docs/inheritance.html#overriding-properties
+Overriding properties works in a similar way to overriding methods;
+properties declared on a superclass that are then redeclared on a derived class must be prefaced with override, and they must have a compatible type.
+Each declared property can be overridden by a property with an initializer or by a property with a get method.
+You can also override a val property with a var property, but not vice versa.
+This is allowed because a val property essentially declares a get method, and overriding it as a var additionally declares a set method in the derived class.
+Code in a derived class can call its superclass functions and property accessors implementations using the super keyword
+
+In Kotlin, implementation inheritance is regulated by the following rule:
+if a class inherits multiple implementations of the same member from its immediate superclasses, it must override this member and provide its own implementation (perhaps, using one of the inherited ones).
+To denote the supertype from which the inherited implementation is taken, use super qualified by the supertype name in angle brackets, e.g. super<Base>
+
+*
+Compile-time constants
+If the value of a read-only property is known at the compile time, mark it as a compile time constant using the const modifier. Such properties need to fulfil the following requirements:
+Top-level, or member of an object declaration or a companion object.
+Initialized with a value of type String or a primitive type
+No custom getter
+
+*
+Late-initialized properties and variables
+Normally, properties declared as having a non-null type must be initialized in the constructor. However, fairly often this is not convenient. For example, properties can be initialized through dependency injection, or in the setup method of a unit test. In this case, you cannot supply a non-null initializer in the constructor, but you still want to avoid null checks when referencing the property inside the body of a class.
+To handle this case, you can mark the property with the lateinit modifier:
+
+public class MyTest {
+    lateinit var subject: TestSubject
+
+    @SetUp fun setup() {
+        subject = TestSubject()
+    }
+    @Test fun test() {
+        subject.method()  // dereference directly
+    }
+}
+The modifier can be used on var properties declared inside the body of a class (not in the primary constructor, and only when the property does not have a custom getter or setter) as well as for top-level properties and local variables. The type of the property or variable must be non-null, and it must not be a primitive type.
+
+Checking whether a lateinit var is initialized:
+To check whether a lateinit var has already been initialized, use .isInitialized on the reference to that property:
+
+if (foo::bar.isInitialized) {
+    println(foo.bar)
+}
+
+*
+Backing Fields, SETTERS and GETTERS - https://kotlinlang.org/docs/properties.html#backing-fields
+Backing fields
+In Kotlin, a field is only used as a part of a property to hold its value in memory.
+Fields can not be declared directly. However, when a property needs a backing field, Kotlin provides it automatically.
+This backing field can be referenced in the accessors using the field identifier:
+
+var counter = 0 // the initializer assigns the backing field directly
+    set(value) {
+        if (value >= 0) field = value
+    }
+
+The field identifier can only be used in the accessors of the property.
+A backing field will be generated for a property if it uses the default implementation of at least one of the accessors, or if a custom accessor references it through the field identifier.
+For example, in the following case there will be no backing field:
+
+val isEmpty: Boolean
+    get() = this.size == 0
+
+*
+FUNCTIONAL INTERFACES
+SAM conversions
+For functional interfaces, you can use SAM conversions that help make your code more concise and readable by using lambda expressions.
+Instead of creating a class that implements a functional interface manually, you can use a lambda expression. With a SAM conversion, Kotlin can convert any lambda expression whose signature matches the signature of the interface's single method into an instance of a class that implements the interface.
+For example, consider the following Kotlin functional interface:
+
+fun interface IntPredicate {
+   fun accept(i: Int): Boolean
+}
+
+If you don't use a SAM conversion, you will need to write code like this:
+
+// Creating an instance of a class
+val isEven = object : IntPredicate {
+   override fun accept(i: Int): Boolean {
+       return i % 2 == 0
+   }
+}
+
+By leveraging Kotlin's SAM conversion, you can write the following equivalent code instead:
+// Creating an instance using lambda
+val isEven = IntPredicate { it % 2 == 0 }
+Copied!
+A short lambda expression replaces all the unnecessary code.
+
+fun interface IntPredicate {
+   fun accept(i: Int): Boolean
+}
+
+val isEven = IntPredicate { it % 2 == 0 }
+
+fun main() {
+   println("Is 7 even? - ${isEven.accept(7)}")
+}
+
+*
+Visibility modifiers - https://kotlinlang.org/docs/visibility-modifiers.html#packages
+
+If you do not specify any visibility modifier, public is used by default, which means that your declarations will be visible everywhere.
+If you mark a declaration private, it will only be visible inside the file containing the declaration.
+If you mark it internal, it is visible everywhere in the same module.
+protected is not available for top-level declarations.
+
+For members declared inside a class:
+
+private means visible inside this class only (including all its members).
+protected is the same as private but is also visible in subclasses.
+internal means that any client inside this module who sees the declaring class sees its internal members.
+public means that any client who sees the declaring class sees its public members.
