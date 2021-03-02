@@ -2,6 +2,8 @@ package org.kotlin.warmup.kotlinlang
 
 fun main() {
 
+    iteratorOne()
+
     label()
     labelLambda()
     labelForEach()
@@ -16,7 +18,20 @@ fun main() {
     println(describeString("Hi"))
     withIndexLoop()
 
+    iterList()
+
+
 }
+
+fun iteratorOne() {
+    val nums = listOf(1, 2, 3, 4, 5)
+    val numsIterator = nums.iterator()
+    while (numsIterator.hasNext()) {
+        println(numsIterator.next())
+    }
+}
+
+
 fun forLoop() {
     val items = listOf("apple", "banana", "kiwi")
     for (item in items)
@@ -37,65 +52,86 @@ fun whileLoop() {
 
 //whenExpression
 fun describe(obj: Any): Any =
-        when (obj) {
-            1 -> "number"
-            "Hi" -> "String"
-            is Long -> "Long"
-            !is String -> "Not a String"
-            else -> "Unkown"
+    when (obj) {
+        1 -> "number"
+        "Hi" -> "String"
+        is Long -> "Long"
+        !is String -> "Not a String"
+        else -> "Unkown"
 
-        }
+    }
 
 //returns a string
 fun describeString(obj: Any): String =
-        when (obj) {
-            1 -> "One"
-            "Hello" -> "Greeting"
-            is Long -> "Long"
-            !is String -> "Not a string"
-            else -> "Unknown"
-        }
+    when (obj) {
+        1 -> "One"
+        "Hello" -> "Greeting"
+        is Long -> "Long"
+        !is String -> "Not a string"
+        else -> "Unknown"
+    }
 
 // Alternatively, you can use the withIndex library function:
-fun withIndexLoop(){
+fun withIndexLoop() {
     var items = listOf("apple", "kiwi", "banana")
-    for((index, values) in items.withIndex()){
+    for ((index, values) in items.withIndex()) {
         println("The element is: $index, - $values")
     }
+
+    val numbersMap = mapOf("key1" to 1, "key2" to 2, "key3" to 3, "key11" to 11)
+    val filteredMap = numbersMap.filter { (key, value) -> key.endsWith("1") && value > 10}
+    println(filteredMap)
 }
 
 // when matches its argument against all branches sequentially until some branch condition is satisfied.
 // The else branch is evaluated if none of the other branch conditions are satisfied. If when is used as an expression, the else branch is mandatory
 
 // The return -expression returns from the nearest enclosing function
-fun label(){
-    listOf(1,2,3,4,5).forEach{
+fun label() {
+    listOf(1, 2, 3, 4, 5).forEach {
         if (it == 3) return // non-local return directly to the caller of foo()
         println(it)
     }
     println("Unreachable point")
 }
 
-fun labelLambda(){
-    listOf(1,2,3,4,5).forEach lit@{
+fun labelLambda() {
+    listOf(1, 2, 3, 4, 5).forEach lit@{
         if (it == 3) return@lit // local return to the caller of the lambda - the forEach loop
         println(it)
     }
     println(" done with explicit label")
 }
 
-fun labelForEach(){
-    listOf(1,2,3,4,5).forEach {
-        if(it == 3) return@forEach
+fun labelForEach() {
+    listOf(1, 2, 3, 4, 5).forEach {
+        if (it == 3) return@forEach
         println(it)
     }
     println(" done with implicit label")
 }
 
-fun labelLoop(){
-    listOf(1,2,3,4,5).forEach loop@{
-        if(it == 3) return@loop
+fun labelLoop() {
+    listOf(1, 2, 3, 4, 5).forEach loop@{
+        if (it == 3) return@loop
         println(it)
     }
     println(" done with nested loop")
+}
+
+/*
+List iterators
+For lists, there is a special iterator implementation: ListIterator. It supports iterating lists in both directions: forwards and backwards.
+Backward iteration is implemented by the functions hasPrevious() and previous().
+Additionally, the ListIterator provides information about the element indices with the functions nextIndex() and previousIndex().
+*/
+fun iterList() {
+    val numbers = listOf("one", "two", "three", "four")
+    val listIterator = numbers.listIterator()
+    while (listIterator.hasNext()) listIterator.next()
+    println("Iterating backwards:")
+    while (listIterator.hasPrevious()) {
+        print("Index: ${listIterator.previousIndex()}")
+        println(", value: ${listIterator.previous()}")
+    }
 }

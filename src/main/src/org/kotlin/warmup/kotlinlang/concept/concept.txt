@@ -596,3 +596,52 @@ Referential equality (=== - two references point to the same object)
 Referential equality is checked by the === operation and its negated counterpart !==. a === b evaluates to true if and only if a and b point to the same object.
 For values represented by primitive types at runtime (for example, Int ), the === equality check is equivalent to the == check.
 
+======================================================================
+COLLECTIONS
+The following collection types are relevant for Kotlin:
+
+LIST is an ordered collection with access to elements by indices – integer numbers that reflect their position. Elements can occur more than once in a list. An example of a list is a sentence: it's a group of words, their order is important, and they can repeat.
+SET is a collection of unique elements. It reflects the mathematical abstraction of set: a group of objects without repetitions. Generally, the order of set elements has no significance. For example, an alphabet is a set of letters.
+MAP (or dictionary) is a set of key-value pairs. Keys are unique, and each of them maps to exactly one value. The values can be duplicates. Maps are useful for storing logical connections between objects, for example, an employee's ID and their position.
+
+When creating empty collections, specify the type explicitly:
+
+val numbersSet = setOf("one", "two", "three", "four")
+val emptySet = mutableSetOf<String>()
+
+val numbersMap = mapOf("key1" to 1, "key2" to 2, "key3" to 3, "key4" to 1)
+val numbersMap = mutableMapOf<String, String>().apply { this["one"] = "1"; this["two"] = "2" }
+
+val numbers = mutableListOf("one", "two", "three")
+val num = mutableListOf<String>()
+
+There are also functions for creating collections without any elements: emptyList(), emptySet(), and emptyMap().
+When creating empty collections, you should specify the type of elements that the collection will hold.
+val empty = emptyList<String>()
+
+Collection copying functions, such as toList(), toMutableList(), toSet() and others, create a snapshot of a collection at a specific moment.
+
+ITERATORS
+Iterators can be obtained for inheritors of the Iterable<T> interface, including Set and List, by calling the iterator() function.
+Once you obtain an iterator, it points to the first element of a collection; calling the next() function returns this element and moves the iterator position to the following element if it exists.
+val numbers = listOf("one", "two", "three", "four")
+val numbersIterator = numbers.iterator()
+while (numbersIterator.hasNext()) {
+    println(numbersIterator.next())
+}
+
+Another way to go through an Iterable collection is the well-known for loop.
+val numbers = listOf("one", "two", "three", "four")
+for (item in numbers) {
+    println(item)
+}
+
+A useful forEach() function that lets you automatically iterate a collection and execute the given code for each element.
+So, the same example would look like this:
+val numbers = listOf("one", "two", "three", "four")
+numbers.forEach {
+    println(it)
+}
+
+
+
