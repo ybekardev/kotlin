@@ -340,7 +340,8 @@ Test predicates
 There are functions that simply test a predicate against collection elements:
 any() returns true if at least one element matches the given predicate.
 none() returns true if none of the elements match the given predicate.
-all() returns true if all elements match the given predicate. Note that all() returns true when called with any valid predicate on an empty collection.
+all() returns true if all elements match the given predicate.
+Note that all() returns true when called with any valid predicate on an empty collection.
  */
 fun TestPredicate() {
     val numbers = listOf("one", "two", "three", "four")
@@ -378,7 +379,8 @@ fold() and reduce() perform fold and reduce operations on each group as a separa
 aggregate() applies a given operation subsequently to all the elements in each group and returns the result.
  */
 fun retrieveColl() {
-    // slice() returns a list of the collection elements with given indices. The indices may be passed either as a range or as a collection of integer values.
+    // slice() returns a list of the collection elements with given indices.
+    // The indices may be passed either as a range or as a collection of integer values.
     val numbers = listOf("one", "two", "three", "four", "five", "six")
     println(numbers.slice(1..3))
     println(numbers.slice(0..4 step 2))
@@ -719,7 +721,7 @@ fun let() {
     Person("Alice", 20, "Amsterdam").let {
         println(it.name)
     }
-    // If you write the same without let, you'll have to introduce a new variable and repeat its name whenever you use it.
+    // If you write the same without let, you'll have to introduce a new variable & repeat its name whenever you use it.
     val alice = Person("Alice", 20, "Amsterdam")
     println(alice.name)
 }
@@ -769,8 +771,8 @@ fun apply() {
 
 /*
 WITH
-A non-extension function: the context object is passed as an argument, but inside the lambda, it's available as a receiver (this ).
-The return value is the lambda result.
+A non-extension function: the context object is passed as an argument,
+but inside the lambda, it's available as a receiver (this ). The return value is the lambda result.
 We recommend with for calling functions on the context object without providing the lambda result.
 In the code, with can be read as “ with this object, do the following.”
  */
