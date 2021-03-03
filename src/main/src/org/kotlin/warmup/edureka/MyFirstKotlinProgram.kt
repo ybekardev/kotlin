@@ -1,6 +1,6 @@
 package org.kotlin.warmup.edureka
 
-fun main(){
+fun main() {
 
     var edureka = Kotlin()
     edureka.name = "Edureka Kotlin"

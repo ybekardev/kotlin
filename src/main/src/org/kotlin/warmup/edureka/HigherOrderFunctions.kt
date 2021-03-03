@@ -1,14 +1,13 @@
 package org.kotlin.warmup.edureka
 
-fun main(){
+fun main() {
 
-    val multiply  = {num1 : Int, num2 : Int -> num1 * num2}
-    println("5 * 10 = ${multiply(5,10)}")
+    val multiply = { num1: Int, num2: Int -> num1 * num2 }
+    println("5 * 10 = ${multiply(5, 10)}")
 
 }
 
 
-
-fun passFunction(abc : () -> Unit){
+fun passFunction(abc: () -> Unit) {
     abc()
 }

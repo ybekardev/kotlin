@@ -1,0 +1,177 @@
+Coding conventions
+
+https://kotlinlang.org/docs/coding-conventions.html#class-layout
+
+*
+You can configure them to automatically format your code in consistence with the given code style.
+Apply the style guide
+Go to preferences/settings | Editor | Code Style | Kotlin.
+Click Set from....
+Select Kotlin style guide.
+
+*
+Verify that your code follows the style guide
+Go to Settings | Editor | Inspections | Kotlin.
+Open Kotlin | Style issues.
+Switch on File is not formatted according to project settings inspection. Additional inspections that verify other issues described in the style guide (such as naming conventions) are enabled by default.
+
+*
+Class layout
+The contents of a class should go in the following order:
+Property declarations and initializer blocks
+Secondary constructors
+Method declarations
+Companion object
+
+*
+Conditional statements
+Prefer using the expression form of try, if, and when.
+
+return if (x) foo() else bar()
+
+return when(x) {
+    0 -> "zero"
+    else -> "nonzero"
+}
+
+The above is preferable to:
+
+if (x)
+    return foo()
+else
+    return bar()
+
+ when(x) {
+    0 -> return "zero"
+    else -> return "nonzero"
+}
+
+*
+if versus when
+Prefer using if for binary conditions instead of when. For example, use this syntax with if:
+
+`if (x == null) ... else ...`
+
+instead of this one with when:
+when (x) {
+    null -> // ...
+    else -> // ...
+}
+Prefer using when if there are three or more options.
+
+*
+Horizontal whitespace
+Put spaces around binary operators (a + b ). Exception: don't put spaces around the "range to" operator (0..i ).
+Do not put spaces around unary operators (a++ ).
+Put spaces between control flow keywords (if, when, for, and while) and the corresponding opening parenthesis.
+Do not put a space before an opening parenthesis in a primary constructor declaration, method declaration or method call.
+
+class A(val x: Int)
+fun foo(x: Int) { ... }
+fun bar() {
+    foo(1)
+}
+
+Never put a space after (, [, or before ], )
+Never put a space around . or ?.: foo.bar().filter { it > 2 }.joinToString(), foo?.bar()
+Put a space after //: // This is a comment
+Do not put spaces around angle brackets used to specify type parameters: class Map<K, V> { ... }
+Do not put spaces around ::: Foo::class, String::length
+Do not put a space before ? used to mark a nullable type: String?
+As a general rule, avoid horizontal alignment of any kind.
+Renaming an identifier to a name with a different length should not affect the formatting of either the declaration or any of the usages.
+
+*
+Colon
+Put a space before : in the following cases:
+when it's used to separate a type and a supertype
+when delegating to a superclass constructor or a different constructor of the same class
+after the object keyword
+Don't put a space before : when it separates a declaration and its type.
+Always put a space after :.
+
+abstract class Foo<out T : Any> : IFoo {
+    abstract fun foo(a: Int): T
+}
+
+class FooImpl : Foo() {
+    constructor(x: String) : this(x) { /*...*/ }
+
+    val x = object : IFoo { /*...*/ }
+}
+
+*
+Modifiers order
+If a declaration has multiple modifiers, always put them in the following order:
+
+public / protected / private / internal
+expect / actual
+final / open / abstract / sealed / const
+external
+override
+lateinit
+tailrec
+vararg
+suspend
+inner
+enum / annotation / fun // as a modifier in `fun interface`companion
+inline
+infix
+operator
+data
+
+*
+Unit return type
+If a function returns Unit, the return type should be omitted:
+
+fun foo() { // ": Unit" is omitted here
+}
+
+*
+Immutability
+Prefer using immutable data to mutable.
+Always declare local variables and properties as val rather than var if they are not modified after initialization.
+Always use immutable collection interfaces (Collection, List, Set, Map) to declare collections which are not mutated.
+When using factory functions to create collection instances, always use functions that return immutable collection types when possible:
+
+// Bad: use of mutable collection type for value which will not be mutated
+fun validateValue(actualValue: String, allowedValues: HashSet<String>) { ... }
+
+// Good: immutable collection type used instead
+fun validateValue(actualValue: String, allowedValues: Set<String>) { ... }
+
+// Bad: arrayListOf() returns ArrayList<T>, which is a mutable collection type
+val allowedValues = arrayListOf("a", "b", "c")
+
+// Good: listOf() returns List<T>
+val allowedValues = listOf("a", "b", "c")
+
+*
+Default parameter values
+Prefer declaring functions with default parameter values to declaring overloaded functions.
+
+// Bad
+fun foo() = foo("a")
+fun foo(a: String) { /*...*/ }
+
+// Good
+fun foo(a: String = "a") { /*...*/ }
+
+*
+Nullable Boolean values in conditions
+If you need to use a nullable Boolean in a conditional statement, use if (value == true) or if (value == false) checks.
+
+*
+Loops
+Prefer using higher-order functions (filter, map etc.) to loops.
+Exception: forEach (prefer using a regular for loop instead, unless the receiver of forEach is nullable or forEach is used as part of a longer call chain).
+
+When making a choice between a complex expression using multiple higher-order functions and a loop,
+understand the cost of the operations being performed in each case and keep performance considerations in mind.
+
+*
+Loops on ranges
+Use the until function to loop over an open range:
+
+for (i in 0..n - 1) { /*...*/ }  // bad
+for (i in 0 until n) { /*...*/ }  // good

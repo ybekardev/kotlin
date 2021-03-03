@@ -1,6 +1,6 @@
 package org.kotlin.warmup.bradtraversy
 
-fun main(){
+fun main() {
     val x = 4 / 2
     println(x)
 
@@ -18,7 +18,7 @@ fun main(){
     val bool2 = (h1 != h2)
     println(bool2)
 
-    val bool3 = (true || true)
+    val bool3 = (true)
     println(bool3)
 
     val bool4 = (true && false)
@@ -28,22 +28,22 @@ fun main(){
     println(string.toUpperCase())
 
     val t = 1 + 1
-    if(t == 2){
+    if (t == 2) {
         println("t is 2")
-    }else if(t == 3){
+    } else if (t == 3) {
         println("t is 3")
-    }else {
+    } else {
         println("t is NOT 2 or 3!")
     }
 
-    val g = if(t == 2) 2 else 3
+    val g = if (t == 2) 2 else 3
     println(g)
 
     //Null values
     val s: Int? = null
     println(s)
 
-  /*  val userInput = readLine()
+    /*  val userInput = readLine()
     val userInput2 = readLine()
     val total = userInput!!.toInt() + userInput2!!.toInt();
     println(total)
@@ -62,22 +62,22 @@ fun main(){
     println(shoppingList2)
 
     var counter = 0;
-    while(counter < shoppingList2.size){
+    while (counter < shoppingList2.size) {
         val obj = shoppingList2[counter]
         println(obj)
         counter++
     }
 
-    for(shplist in shoppingList2){
+    for (shplist in shoppingList2) {
         println(shplist)
     }
 
-    for(i in 1..10){
+    for (i in 1..10) {
         print(i)
     }
 
     val r = 6
-    when(r){
+    when (r) {
         in 1..3 -> println("value is between 1 - 3")
         in 4..6 -> println("value is between 4 - 6")
         else -> {

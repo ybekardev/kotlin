@@ -6,7 +6,7 @@ class Dog : Animal("Roth") {
         legCounts
     }
 
-    fun bark(){
+    fun bark() {
         println("Whoof!")
     }
 }
