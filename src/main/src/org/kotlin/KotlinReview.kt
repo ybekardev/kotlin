@@ -35,6 +35,315 @@ fun main() {
     var i = 3
     if (i in 1..5) {
     }
+    for (c in 'z' downTo 's' step 2) {
+        print(c)
+    }
+    if (i !in 6..10) {
+        print("x is not in range from 6 to 10")
+    }
+
+    // A function that takes a second optional parameter with default value Info. The return type is omitted, meaning that it's actually Unit.
+    fun printMessageWithPrefix(message: String, prefix: String = "Info") {
+        println("[$prefix] $message")
+    }
+    // Calls the function with two parameters, passing values for both of them.
+    printMessageWithPrefix("Hello", "Log")
+    // Calls the function using named arguments and changing the order of the arguments.
+    printMessageWithPrefix(prefix = "Log", message = "Hello")
+    // Calls the same function omitting the second one. The default value Info is used.
+    printMessageWithPrefix("Hello")
+
+    //Operator Functions Certain functions can be "upgraded" to operators, allowing their calls with the corresponding operator symbol.
+    operator fun Int.times(str: String) = str.repeat(this)
+    println(2 * "Bye ") // Bye Bye
+    operator fun String.get(range: IntRange) = substring(range)
+    val str = "Always forgive your enemies; nothing annoys them so much."
+    println(str[0..14]) // Always forgive
+
+    // Functions with vararg Parameters Varargs allow you to pass any number of arguments by separating them with commas.
+    fun printAll(vararg messages: String) {
+        for (m in messages) println(m)
+    }
+    printAll("Hello", "Hallo", "Salut", "Hola", "你好")
+    fun printAllWithPrefix(vararg messages: String, prefix: String) {
+        for (m in messages) println(prefix + m)
+    }
+    printAllWithPrefix(
+        "Hello", "Hallo", "Salut", "Hola", "你好",
+        prefix = "Greeting: "
+    )
+
+    /*
+Kotlin classes are final by default. If you want to allow the class inheritance, mark the class with the open modifier.
+Kotlin methods are also final by default. As with the classes, the open modifier allows overriding them.
+Overriding methods or attributes requires the override modifier.
+Passing Constructor Arguments to Superclass
+open class Lion(val name: String, val origin: String) {
+    fun sayHello() {
+        println("$name, the lion from $origin says: graoh!")
+    }
+}
+class Asiatic(name: String) : Lion(name = name, origin = "India") // 1
+fun main() {
+    val lion: Lion = Asiatic("Rufo")                              // 2
+    lion.sayHello()
+}
+1-name in the Asiatic declaration is neither a var nor val: it's a constructor argument, whose value is passed to the name property of the superclass Lion.
+2-Creates an Asiatic instance with the name Rufo. The call invokes the Lion constructor with arguments Rufo and India.
+
+*
+ITERATORS
+You can define your own iterators in your classes by implementing the iterator operator in them.
+class Animal(val name: String)
+
+class Zoo(val animals: List<Animal>) {
+    operator fun iterator(): Iterator<Animal> {             // 1
+        return animals.iterator()                           // 2
+    }
+}
+
+fun main() {
+    val zoo = Zoo(listOf(Animal("zebra"), Animal("lion")))
+    for (animal in zoo) {                                   // 3
+        println("Watch out, it's a ${animal.name}")
+    }
+}
+Defines an iterator in a class. It must be named iterator and have the operator modifier.
+Returns the iterator that meets the following method requirements:
+next(): Animal
+hasNext(): Boolean
+Loops through animals in the zoo with the user-defined iterator.
+
+Equality Checks
+Kotlin uses == for structural comparison and === for referential comparison.
+val authors = setOf("Shakespeare", "Hemingway", "Twain")
+val writers = setOf("Twain", "Shakespeare", "Hemingway")
+println(authors == writers)   // 1
+println(authors === writers)  // 2
+Returns true because it calls authors.equals(writers) and sets ignore element order.
+Returns false because authors and writers are distinct references.
+
+*
+Sealed Classes
+Sealed classes let you restrict the use of inheritance. Once you declare a class sealed, it can only be subclassed from inside the same file where the sealed class is declared. It cannot be subclassed outside of the file where the sealed class is declared.
+sealed class Mammal(val name: String)                                                   // 1
+class Cat(val catName: String) : Mammal(catName)                                        // 2
+class Human(val humanName: String, val job: String) : Mammal(humanName)
+fun greetMammal(mammal: Mammal): String {
+    when (mammal) {                                                                     // 3
+        is Human -> return "Hello ${mammal.name}; You're working as a ${mammal.job}"    // 4
+        is Cat -> return "Hello ${mammal.name}"                                         // 5
+    }                                                                                   // 6
+}
+fun main() {
+    println(greetMammal(Cat("Snowy")))
+}
+
+In Kotlin you also have the object keyword. It is used to obtain a data type with a single implementation.
+If you are a Java user and want to understand what "single" means, you can think of the Singleton pattern: it ensures you that only one instance of that class is created even if 2 threads try to create it.
+To achieve this in Kotlin, you only need to declare an object: no class, no constructor, only a lazy instance. Why lazy? Because it will be created once when the object is accessed. Otherwise, it won't even be created.
+
+*
+object Expression
+Here is a basic typical usage of an object expression: a simple object/properties structure. There is no need to do so in class declaration: you create a single object, declare its members and access it within one function. Objects like this are often created in Java as anonymous class instances.
+fun rentPrice(standardDays: Int, festivityDays: Int, specialDays: Int): Unit {
+    val dayRates = object {
+        var standard: Int = 30 * standardDays
+        var festivity: Int = 50 * festivityDays
+        var special: Int = 100 * specialDays
+    }
+    val total = dayRates.standard + dayRates.festivity + dayRates.special
+    print("Total price: $$total")
+}
+fun main() {
+    rentPrice(10, 2, 1)
+}
+
+*
+object Declaration
+You can also use the object declaration. It isn't an expression, and can't be used in a variable assignment. You should use it to directly access its members:
+object DoAuth {
+    fun takeParams(username: String, password: String) {
+        println("input Auth parameters = $username:$password")
+    }
+}
+fun main(){
+    DoAuth.takeParams("foo", "qwerty")
+}
+Creates an object declaration.
+Defines the object method.
+Calls the method. This is when the object is actually created.
+
+*
+Companion Objects
+An object declaration inside a class defines another useful case: the companion object. Syntactically it's similar to the static methods in Java: you call object members using its class name as a qualifier. If you plan to use a companion object in Kotlin, consider using a package-level function instead.
+class BigBen {
+    companion object Bonger {
+        fun getBongs(nTimes: Int) {
+            for (i in 1 .. nTimes) {
+                print("BONG ")
+            }
+        }
+    }
+}
+
+fun main() {
+    BigBen.getBongs(12)
+}
+class BigBen {
+    companion object Bonger {
+        fun getBongs(nTimes: Int) {
+            for (i in 1 .. nTimes) {
+                print("BONG ")
+            }
+        }
+    }
+}
+fun main() {
+    BigBen.getBongs(12)
+}
+
+*
+A higher-order function is a function that takes another function as parameter and/or returns a function.
+
+ // lambda expression
+var lambda = {println("GeeksforGeeks: A Computer Science portal for Geeks") }
+      // higher-order function
+fun higherfunc( lmbd: () -> Unit ) {     // accepting lambda as parameter
+    lmbd()                               //invokes lambda expression
+}
+fun main() {
+     //invoke higher-order function
+    higherfunc(lambda)                 // passing lambda as parameter
+}
+
+  // lambda expression
+var lambda = {a: Int , b: Int -> a + b }
+    // higher order function
+fun higherfunc( lmbd: (Int, Int) -> Int) {      // accepting lambda as parameter
+    var result = lmbd(2,4)    // invokes the lambda expression by passing parameters
+    println("The sum of two numbers is: $result")
+}
+fun main() {
+    higherfunc(lambda)           //passing lambda as parameter
+}
+
+  // regular function definition
+fun printMe(s:String): Unit{
+    println(s)
+}
+   // higher-order function definition
+fun higherfunc( str : String, myfunc: (String) -> Unit){
+   // invoke regular function using local name
+    myfunc(str)
+}
+fun main() {
+    // invoke higher-order function
+    higherfunc("GeeksforGeeks: A Computer Science portal for Geeks",::printMe) // :: is the notation that references a function by name in Kotlin.
+}
+
+  // regular function definition
+fun add(a: Int, b: Int): Int{
+    var sum = a + b
+    return sum
+}
+    // higher-order function definition
+fun higherfunc(addfunc:(Int,Int)-> Int){
+    // invoke regular function using local name
+    var result = addfunc(3,6)
+    print("The sum of two numbers is: $result")
+}
+fun main() {
+    // invoke higher-order function
+    higherfunc(::add)
+}
+
+      // function declaration
+fun mul(a: Int, b: Int): Int{
+    return a*b
+}
+    //higher-order function declaration
+fun higherfunc() : ((Int,Int)-> Int){
+    return ::mul
+}
+fun main() {
+     // invoke function and store the returned function into a variable
+    val multiply = higherfunc()
+    // invokes the mul() function by passing arguments
+    val result = multiply(2,4)
+    println("The multiplication of two numbers is: $result")
+}
+
+*
+To execute extensions on null references. In an extension function, you can check the object for null and use the result in your code:
+fun <T> T?.nullSafeToString() = this?.toString() ?: "NULL"
+fun <T> T?.nullSafeToString() = this?.toString() ?: "NULL"
+
+*
+filter
+filter function enables you to filter collections. It takes a filter predicate as a lambda-parameter. The predicate is applied to each element. Elements that make the predicate true are returned in the result collection.
+val numbers = listOf(1, -2, 3, -4, 5, -6)
+val positives = numbers.filter { x -> x > 0 }
+val negatives = numbers.filter { it < 0 }
+
+*
+map
+map extension function enables you to apply a transformation to all elements in a collection. It takes a transformer function as a lambda-parameter.
+val numbers = listOf(1, -2, 3, -4, 5, -6)
+val doubled = numbers.map { x -> x * 2 }
+val tripled = numbers.map { it * 3 }
+
+*
+any, all, none
+These functions check the existence of collection elements that match a given predicate.
+val numbers = listOf(1, -2, 3, -4, 5, -6)
+val anyNegative = numbers.any { it < 0 }   // returns true if the collection contains at least one element
+val allEven = numbers.all { it % 2 == 0 }  // returns true if all elements in collection match the given predicate
+val allEven = numbers.none { it % 2 == 1 } // returns true if there are no elements that match
+
+*
+find, findLast
+find and findLast functions return the first or the last collection element that matches the given predicate.
+first, last
+These functions return the first and the last element of the collection correspondingly. If no match, the functions throw NoSuchElementException.
+firstOrNull, lastOrNull
+These functions work almost the same way with one difference: they return null if there are no matching elements.
+count
+count functions returns either the total number of elements in a collection
+sorted
+sorted returns a list of collection elements sorted according to their natural sort order (ascending).
+minOrNull, maxOrNull
+minOrNull and maxOrNull functions return the smallest and the largest element of a collection. If the collection is empty, they return null.
+associateBy, groupBy
+Functions associateBy and groupBy build maps from the elements of a collection indexed by the specified key.
+
+*partition
+The partition function splits the original collection into a pair of lists
+val numbers = listOf(1, -2, 3, -4, 5, -6)
+val evenOdd = numbers.partition { it % 2 == 0 }           // Splits numbers into a Pair of lists with even and odd numbers.
+val (positives, negatives) = numbers.partition { it > 0 } // Splits numbers into two lists with positive and negative numbers.
+
+*
+flatMap
+flatMap transforms each element of a collection into an iterable object and builds a single list of the transformation results.
+val numbers = listOf(1, 2, 3)
+val tripled = numbers.flatMap { listOf(it, it, it) }
+
+*
+zip
+zip function merges two given collections into a new collection. By default, the result collection contains Pairs of source collection elements with the same index.
+val A = listOf("a", "b", "c")
+val B = listOf(1, 2, 3, 4)
+val resultPairs = A zip B // A to B: [(a, 1), (b, 2), (c, 3)]
+
+*
+getOrElse
+getOrElse provides safe access to elements of a collection. It takes an index and a function that provides the default value in cases when the index is out of bound.
+val list = listOf(0, 10, 20)
+println(list.getOrElse(1) { 42 })    // 10
+println(list.getOrElse(10) { 42 })   // 42
+
+     */
 
     val c = Array(5) { i -> (i * i) }
     c.forEach { println(it) }
@@ -698,6 +1007,7 @@ fun testException() {
 //Create a singleton
 object Singleton {
     const val name: String = "Mike"
+
     //age could be const as well
     val age: Int = 34
 }
